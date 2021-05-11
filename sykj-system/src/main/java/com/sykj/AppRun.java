@@ -25,6 +25,8 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,7 +59,12 @@ public class AppRun {
         fa.addConnectorCustomizers(connector -> connector.setProperty("relaxedQueryChars", "[]{}"));
         return fa;
     }
-
+//    @Bean
+//    public HttpFirewall allowUrlSemicolonHttpFirewall() {
+//        StrictHttpFirewall firewall = new StrictHttpFirewall();
+//        firewall.setAllowSemicolon(true);
+//        return firewall;
+//    }
     /**
      * 访问首页提示
      *

@@ -105,6 +105,11 @@ public class User extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "最后修改密码的时间", hidden = true)
     private Date pwdResetTime;
 
+    @JoinColumn(name = "company_id")
+    @ManyToOne(fetch=FetchType.LAZY)
+    @ApiModelProperty(value = "所属公司",hidden = true)
+    private Company company;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -16,6 +16,7 @@
 package com.sykj.modules.system.service.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.sykj.modules.system.domain.Company;
 import lombok.Getter;
 import lombok.Setter;
 import com.sykj.base.BaseDTO;
@@ -64,4 +65,6 @@ public class UserDto extends BaseDTO implements Serializable {
     private Boolean isAdmin = false;
 
     private Date pwdResetTime;
+
+    private Company company;
 }
