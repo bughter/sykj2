@@ -19,7 +19,7 @@ import com.sykj.annotation.Log;
 import com.sykj.modules.system.domain.Rules;
 import com.sykj.modules.system.service.RulesService;
 import com.sykj.modules.system.service.dto.RulesQueryCriteria;
-import com.sykj.utils.UUIDUtils;
+//import com.sykj.utils.UUIDUtils;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
