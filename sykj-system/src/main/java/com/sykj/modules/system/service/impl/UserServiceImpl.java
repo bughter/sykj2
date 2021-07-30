@@ -15,6 +15,8 @@
  */
 package com.sykj.modules.system.service.impl;
 
+import com.sykj.modules.system.domain.Post;
+import com.sykj.modules.system.domain.Rules;
 import com.sykj.modules.system.service.mapstruct.UserMapper;
 import com.sykj.utils.*;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +68,17 @@ public class UserServiceImpl implements UserService {
         Page<User> page = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
         return PageUtil.toPage(page.map(userMapper::toDto));
     }
+
+    @Override
+    public Object queryAll2(UserQueryCriteria criteria, Pageable pageable) {
+        User user= userRepository.findByUsername(SecurityUtils.getCurrentUsername());
+        if(null!=user.getCompany()){
+            criteria.setCompanyId(user.getCompany().getId());
+        }
+        Page<User> page = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
+        return PageUtil.toPage(page.map(userMapper::toDto));
+    }
+
 
     @Override
     public List<UserDto> queryAll(UserQueryCriteria criteria) {
@@ -133,6 +146,16 @@ public class UserServiceImpl implements UserService {
         user.setPhone(resources.getPhone());
         user.setNickName(resources.getNickName());
         user.setGender(resources.getGender());
+        if(null!=resources.getPost()){
+            Post post=new Post();
+            post.setPostId(resources.getPost().getPostId());
+            user.setPost(post);
+        }
+        if(null!=resources.getRules()){
+            Rules rules=new Rules();
+            rules.setId(resources.getRules().getId());
+            user.setRules(rules);
+        }
         userRepository.save(user);
         // 清除缓存
         delCaches(user.getId(), user.getUsername());

@@ -15,6 +15,7 @@
 */
 package com.sykj.modules.system.service.dto;
 
+import com.sykj.modules.system.domain.Company;
 import com.sykj.modules.system.domain.Rule;
 import lombok.Data;
 import java.sql.Timestamp;
@@ -37,7 +38,7 @@ public class RulesDto implements Serializable {
     private String rulesName;
 
     /** 所属公司 */
-    private Integer company;
+    private Company company;
 
     /** 创建时间 */
     private Timestamp createTime;

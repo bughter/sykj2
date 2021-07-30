@@ -106,9 +106,19 @@ public class User extends BaseEntity implements Serializable {
     private Date pwdResetTime;
 
     @JoinColumn(name = "company_id")
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne
     @ApiModelProperty(value = "所属公司",hidden = true)
     private Company company;
+
+    @JoinColumn(name = "post_id")
+    @ManyToOne
+    @ApiModelProperty(value = "职位",hidden = true)
+    private Post post;
+
+    @JoinColumn(name = "rules_id")
+    @ManyToOne
+    @ApiModelProperty(value = "规则集",hidden = true)
+    private Rules rules;
 
     @Override
     public boolean equals(Object o) {

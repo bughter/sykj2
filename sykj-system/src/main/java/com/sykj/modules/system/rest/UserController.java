@@ -20,6 +20,7 @@ import com.sykj.annotation.Log;
 import com.sykj.base.BaseEntity;
 import com.sykj.config.RsaProperties;
 import com.sykj.exception.BadRequestException;
+import com.sykj.modules.system.domain.Company;
 import com.sykj.modules.system.domain.User;
 import com.sykj.modules.system.domain.vo.UserPassVo;
 import com.sykj.modules.system.service.dto.RoleSmallDto;
@@ -106,6 +107,15 @@ public class UserController {
         return new ResponseEntity<>(PageUtil.toPage(null,0),HttpStatus.OK);
     }
 
+    //仅搜索自己所属公司的用户
+    @ApiOperation("查询用户")
+    @GetMapping(value="/user_list")
+    @PreAuthorize("@el.check('user:list')")
+    public ResponseEntity<Object> query2(UserQueryCriteria criteria, Pageable pageable){
+        return new ResponseEntity<>(userService.queryAll2(criteria,pageable),HttpStatus.OK);
+    }
+
+
     @Log("新增用户")
     @ApiOperation("新增用户")
     @PostMapping
@@ -114,6 +124,9 @@ public class UserController {
         checkLevel(resources);
         // 默认密码 123456
         resources.setPassword(passwordEncoder.encode("123456"));
+        Dept dept=new Dept();
+        dept.setId(2l);
+        resources.setDept(dept);
         userService.create(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

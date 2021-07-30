@@ -62,10 +62,19 @@ public class PostController {
         return new ResponseEntity<>(postService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @GetMapping(value = "/c_list")
+    @GetMapping(value = "/getPost")
     @Log("查询api/post")
     @ApiOperation("查询api/post")
     @PreAuthorize("@el.check('post:list')")
+    public ResponseEntity<Object> getPost(PostQueryCriteria criteria, Pageable pageable, String companyId){
+        criteria.setCompanyId(companyId);
+        return new ResponseEntity<>(postService.queryAll(criteria,pageable),HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/c_list")
+    @Log("查询api/post")
+    @ApiOperation("查询api/post")
+    @PreAuthorize("@el.check('post:clist')")
     public ResponseEntity<Object> query2(PostQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(postService.queryAll2(criteria,pageable),HttpStatus.OK);
     }
@@ -75,9 +84,6 @@ public class PostController {
     @ApiOperation("新增api/post")
     @PreAuthorize("@el.check('post:add')")
     public ResponseEntity<Object> create(@Validated @RequestBody Post resources){
-        if(null == resources.getPPost().getPostId()){
-            resources.setPPost(null);
-        }
         return new ResponseEntity<>(postService.create(resources),HttpStatus.CREATED);
     }
 

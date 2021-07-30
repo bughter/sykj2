@@ -85,9 +85,10 @@ public class Rule implements Serializable {
     @ApiModelProperty(value = "最后更新")
     private String updateBy;
 
-    @Column(name = "company")
-    @ApiModelProperty(value = "所属公司")
-    private Integer company;
+    @JoinColumn(name = "company")
+    @ManyToOne(fetch=FetchType.LAZY)
+    @ApiModelProperty(value = "公司", hidden = true)
+    private Company company;
 
     @Column(name = "upper_limit",nullable = false)
     @NotNull

@@ -15,8 +15,9 @@
 */
 package com.sykj.modules.system.service.impl;
 
-import com.sykj.utils.ValidationUtil;
-import com.sykj.utils.FileUtil;
+import com.sykj.modules.system.domain.User;
+import com.sykj.modules.system.repository.UserRepository;
+import com.sykj.utils.*;
 import lombok.RequiredArgsConstructor;
 import com.sykj.modules.system.repository.RuleRepository;
 import com.sykj.modules.system.service.RuleService;
@@ -27,8 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.sykj.utils.PageUtil;
-import com.sykj.utils.QueryHelp;
+
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
@@ -49,9 +49,14 @@ public class RuleServiceImpl implements RuleService {
 
     private final RuleRepository ruleRepository;
     private final RuleMapper ruleMapper;
+    private final UserRepository userRepository;
 
     @Override
     public Map<String,Object> queryAll(RuleQueryCriteria criteria, Pageable pageable){
+        User user= userRepository.findByUsername(SecurityUtils.getCurrentUsername());
+        if(null!=user.getCompany()){
+            criteria.setCompanyId(user.getCompany().getId());
+        }
         Page<Rule> page = ruleRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(ruleMapper::toDto));
     }
@@ -72,6 +77,10 @@ public class RuleServiceImpl implements RuleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RuleDto create(Rule resources) {
+        User user= userRepository.findByUsername(SecurityUtils.getCurrentUsername());
+        if(null!=user.getCompany()){
+            resources.setCompany(user.getCompany());
+        }
         return ruleMapper.toDto(ruleRepository.save(resources));
     }
 

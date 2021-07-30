@@ -15,6 +15,7 @@
 */
 package com.sykj.modules.system.service.dto;
 
+import com.sykj.modules.system.domain.Company;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -55,7 +56,7 @@ public class RuleDto implements Serializable {
     private String updateBy;
 
     /** 所属公司 */
-    private Integer company;
+    private Company company;
 
     /**
      * 价格上限

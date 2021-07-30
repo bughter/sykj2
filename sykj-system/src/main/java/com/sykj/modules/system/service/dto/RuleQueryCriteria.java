@@ -15,6 +15,7 @@
 */
 package com.sykj.modules.system.service.dto;
 
+import com.sykj.modules.system.domain.Company;
 import lombok.Data;
 import java.util.List;
 import com.sykj.annotation.Query;
@@ -28,7 +29,7 @@ import com.sykj.annotation.Query;
 public class RuleQueryCriteria{
 
     /** 精确 */
-    @Query
+    @Query(type = Query.Type.INNER_LIKE)
     private String rName;
 
     /** 精确 */
@@ -38,4 +39,7 @@ public class RuleQueryCriteria{
     /** 精确 */
     @Query
     private Integer cityRank;
+
+    @Query(joinName = "company", propName="id")
+    private String companyId;
 }

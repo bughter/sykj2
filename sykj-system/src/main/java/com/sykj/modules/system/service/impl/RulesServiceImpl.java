@@ -16,8 +16,9 @@
 package com.sykj.modules.system.service.impl;
 
 import com.sykj.modules.system.domain.Rules;
-import com.sykj.utils.ValidationUtil;
-import com.sykj.utils.FileUtil;
+import com.sykj.modules.system.domain.User;
+import com.sykj.modules.system.repository.UserRepository;
+import com.sykj.utils.*;
 import lombok.RequiredArgsConstructor;
 import com.sykj.modules.system.repository.RulesRepository;
 import com.sykj.modules.system.service.RulesService;
@@ -28,8 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.sykj.utils.PageUtil;
-import com.sykj.utils.QueryHelp;
+
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
@@ -49,11 +49,15 @@ public class RulesServiceImpl implements RulesService {
 
     private final RulesRepository rulesRepository;
     private final RulesMapper rulesMapper;
+    private final UserRepository userRepository;
 
     @Override
     public Map<String,Object> queryAll(RulesQueryCriteria criteria, Pageable pageable){
+        User user= userRepository.findByUsername(SecurityUtils.getCurrentUsername());
+        if(null!=user.getCompany()){
+            criteria.setCompanyId(user.getCompany().getId());
+        }
         Page<Rules> page = rulesRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-//        System.out.println(page.getContent().get(0).getRuleSet().size());
         return PageUtil.toPage(page.map(rulesMapper::toDto));
     }
 
@@ -73,6 +77,10 @@ public class RulesServiceImpl implements RulesService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RulesDto create(Rules resources) {
+        User user= userRepository.findByUsername(SecurityUtils.getCurrentUsername());
+        if(null!=user.getCompany()){
+            resources.setCompany(user.getCompany());
+        }
         return rulesMapper.toDto(rulesRepository.save(resources));
     }
 

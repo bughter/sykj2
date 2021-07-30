@@ -54,9 +54,10 @@ public class Rules implements Serializable {
     @ApiModelProperty(value = "规则集名称")
     private String rulesName;
 
-    @Column(name = "company")
-    @ApiModelProperty(value = "所属公司")
-    private Integer company;
+    @JoinColumn(name = "company")
+    @ManyToOne(fetch=FetchType.LAZY)
+    @ApiModelProperty(value = "公司", hidden = true)
+    private Company company;
 
     @Column(name = "create_time")
     @CreationTimestamp

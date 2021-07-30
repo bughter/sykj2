@@ -20,16 +20,21 @@ import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 import javax.validation.constraints.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -83,14 +88,26 @@ public class Company implements Serializable {
     @ApiModelProperty(value = "最后更新")
     private String updateBy;
 
-    @ManyToMany
-    @ApiModelProperty(value = "用户岗位")
+    @ManyToMany(fetch=FetchType.EAGER)
+    @ApiModelProperty(value = "公司类型")
     @JoinTable(name = "company_company_type",
             joinColumns = {@JoinColumn(name = "company_id",referencedColumnName = "company_id")},
             inverseJoinColumns = {@JoinColumn(name = "company_type_id",referencedColumnName = "company_type_id")})
     private Set<CompanyType> companyTypes;
 
+    @JoinColumn(name = "w_id")
+    @ManyToOne
+    @ApiModelProperty(value = "钱包",hidden = true)
+    private Wallet wallet;
+
+//    /**
+//     * 钱包流水明细
+//     */
+//    @OneToMany(mappedBy = "company",cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+//    private List<WalletDetail> walletDetails;
+
     public void copy(Company source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }
+
 }

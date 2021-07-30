@@ -32,7 +32,7 @@ public class PostQueryCriteria{
     private String postName;
 
     /** 精确 */
-    @Query
+    @Query(joinName = "pPost", propName="postName",type = Query.Type.INNER_LIKE)
     private String pId;
 
     @Query(joinName = "company", propName="id")

@@ -16,6 +16,8 @@
 package com.sykj.modules.system.service.impl;
 
 import com.sykj.modules.system.domain.Company;
+import com.sykj.modules.system.domain.Wallet;
+import com.sykj.modules.system.repository.WalletRepository;
 import com.sykj.utils.ValidationUtil;
 import com.sykj.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.sykj.utils.PageUtil;
 import com.sykj.utils.QueryHelp;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
@@ -50,6 +54,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
     private final CompanyMapper companyMapper;
+    private final WalletRepository walletRepository;
 
     @Override
     public Map<String,Object> queryAll(CompanyQueryCriteria criteria, Pageable pageable){
@@ -73,7 +78,11 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CompanyDto create(Company resources) {
-        resources.setId(IdUtil.simpleUUID()); 
+        resources.setId(IdUtil.simpleUUID());
+        Wallet wallet=new Wallet();
+        wallet.setBalance(new BigDecimal(0.00));
+        walletRepository.save(wallet);
+        resources.setWallet(wallet);
         return companyMapper.toDto(companyRepository.save(resources));
     }
 

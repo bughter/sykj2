@@ -16,9 +16,12 @@
 package com.sykj.modules.system.service.dto;
 
 import com.sykj.modules.system.domain.CompanyType;
+import com.sykj.modules.system.domain.Wallet;
+import com.sykj.modules.system.domain.WalletDetail;
 import lombok.Data;
 import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -56,4 +59,11 @@ public class CompanyDto implements Serializable {
 
     /** 公司行业类型 */
     private Set<CompanyType> companyTypes;
+
+    /**
+     * 钱包
+     */
+    private Wallet wallet;
+
+//    private List<WalletDetail> walletDetails;
 }

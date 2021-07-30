@@ -93,6 +93,8 @@ public interface UserService {
      */
     Object queryAll(UserQueryCriteria criteria, Pageable pageable);
 
+    Object queryAll2(UserQueryCriteria criteria, Pageable pageable);
+
     /**
      * 查询全部不分页
      * @param criteria 条件

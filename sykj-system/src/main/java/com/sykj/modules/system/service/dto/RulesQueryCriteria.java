@@ -31,7 +31,11 @@ public class RulesQueryCriteria{
     /** 模糊 */
     @Query(type = Query.Type.INNER_LIKE)
     private String rulesName;
+
     /** BETWEEN */
     @Query(type = Query.Type.BETWEEN)
     private List<Timestamp> createTime;
+
+    @Query(joinName = "company", propName="id")
+    private String companyId;
 }

@@ -46,4 +46,7 @@ public class UserQueryCriteria implements Serializable {
 
     @Query(type = Query.Type.BETWEEN)
     private List<Timestamp> createTime;
+
+    @Query(joinName = "company", propName="id")
+    private String companyId;
 }
