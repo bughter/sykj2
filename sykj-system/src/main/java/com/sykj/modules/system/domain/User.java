@@ -120,6 +120,11 @@ public class User extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "规则集",hidden = true)
     private Rules rules;
 
+    @JoinColumn(name = "department_id")
+    @ManyToOne
+    @ApiModelProperty(value = "部门",hidden = true)
+    private Department department;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

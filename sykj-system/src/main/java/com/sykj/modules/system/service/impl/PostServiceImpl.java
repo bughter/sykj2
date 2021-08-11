@@ -98,7 +98,6 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(resources.getPostId()).orElseGet(Post::new);
         ValidationUtil.isNull( post.getPostId(),"Post","id",resources.getPostId());
         post.copy(resources);
-        post.setPPost(resources.getPPost());
         postRepository.save(post);
     }
 
@@ -115,7 +114,6 @@ public class PostServiceImpl implements PostService {
         for (PostDto post : all) {
             Map<String,Object> map = new LinkedHashMap<>();
             map.put("职位名称", post.getPostName());
-            map.put("上级职位", post.getPPost());
             map.put("所属公司", post.getCompany());
             map.put("创建时间", post.getCreateTime());
             map.put("更新时间", post.getUpdateTime());

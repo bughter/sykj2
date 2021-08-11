@@ -17,6 +17,7 @@ package com.sykj.modules.system.service.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.sykj.modules.system.domain.Company;
+import com.sykj.modules.system.domain.Department;
 import com.sykj.modules.system.domain.Post;
 import com.sykj.modules.system.domain.Rules;
 import lombok.Getter;
@@ -73,4 +74,6 @@ public class UserDto extends BaseDTO implements Serializable {
     private Post post;
 
     private Rules rules;
+
+    private Department department;
 }

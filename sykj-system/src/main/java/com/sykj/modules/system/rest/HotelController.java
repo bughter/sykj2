@@ -18,6 +18,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -154,10 +156,7 @@ public class HotelController {
     public String createHotelOrder(String hotelID, String ratePlanID, String roomNum,
                                    String checkInDate, String checkOutDate, String[] guestNames, String arriveTime,
                                    String orderAmount, String contactName, String contactMobile, String orderRemark,
-                                   String realAmount,String flag) throws Exception {
-        if(flag.equals("false")){
-            return JSONObject.parseObject(StringEscapeUtils.unescapeJava("{\"success\":false,\"msg\":\"钱包余额不足！\"}")).toJSONString();
-        }
+                                   String realAmount) throws Exception {
         //新建本地订单
         HotelOrder hotelOrder = new HotelOrder();
         hotelOrder.setHotelId(new Integer(hotelID));
@@ -203,17 +202,18 @@ public class HotelController {
             HotelOrder hotelOrderData = hotelOrderMapper.toEntity(hotelOrderService.findById(customerOrderNo));
             hotelOrderData.setOrderNo(orderNo);
             hotelOrderService.update(hotelOrderData);
+            this.queryHotelOrder(orderNo);
 //            this.pay(orderNo, orderAmount);
         }
 
-        return JSONObject.parseObject(result).toJSONString();
+        return JSONObject.parseObject(StringEscapeUtils.unescapeJava("{\"success\":true,\"msg\":\"生成订单成功！\",\"id\":\""+customerOrderNo+"\"}")).toJSONString();
     }
 
     @GetMapping(value = "/cancelHotelOrder")
     @Log("取消酒店订单")
     @ApiOperation("取消酒店订单")
     @AnonymousAccess
-    public void cancelHotelOrder(String orderNo) {
+    public String cancelHotelOrder(String orderNo) {
         Map<String, String> map = new HashMap<String, String>();
         map.put("appKey", appKey);
         map.put("orderNo", orderNo);
@@ -222,7 +222,9 @@ public class HotelController {
         Boolean success = JSONObject.parseObject(result).getBoolean("success");
         if (success == true) {
             this.queryHotelOrder(orderNo);
+            return JSONObject.parseObject(StringEscapeUtils.unescapeJava("{\"success\":true,\"msg\":\"取消订单成功！\"}")).toJSONString();
         }
+        return JSONObject.parseObject(StringEscapeUtils.unescapeJava("{\"success\":false,\"msg\":\"取消订单失败！\"}")).toJSONString();
     }
 
     @GetMapping(value = "/queryHotelOrder")
@@ -252,7 +254,7 @@ public class HotelController {
     @Log("支付代扣")
     @ApiOperation("支付代扣")
     @AnonymousAccess
-    public void pay(String orderNo, String payAmount) throws Exception {
+    public String pay(String orderNo, String payAmount) throws Exception {
         String sign = secretKey + orderNo + payAmount + secretKey;
         String signMd5 = getMd5(sign);
         Map<String, String> map = new HashMap<String, String>();
@@ -266,8 +268,9 @@ public class HotelController {
         Boolean success = JSONObject.parseObject(result).getBoolean("success");
         if (success == true) {
             this.queryHotelOrder(orderNo);
+            return JSONObject.parseObject(StringEscapeUtils.unescapeJava("{\"success\":true,\"msg\":\"支付成功！\"}")).toJSONString();
         }
-
+        return JSONObject.parseObject(StringEscapeUtils.unescapeJava("{\"success\":false,\"msg\":\"钱包余额不足！\"}")).toJSONString();
     }
 
     @PostMapping(value = "/callBack")
@@ -297,11 +300,22 @@ public class HotelController {
     }
 
     @GetMapping(value = "/queryOrder")
-    @Log("queryOrder")
-    @ApiOperation("queryOrder")
+    @Log("查询订单列表")
+    @ApiOperation("查询订单列表")
     @AnonymousAccess
-    public Map<String,Object> queryOrder(HotelOrderQueryCriteria criteria, Pageable pageable){
-        return hotelOrderService.queryAll(criteria,pageable);
+    public Map<String, Object> queryOrder(HotelOrderQueryCriteria criteria,
+                                          @PageableDefault(sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        return hotelOrderService.queryAll(criteria, pageable);
+    }
+
+    @GetMapping(value = "/queryOrderById")
+    @Log("根据id查酒店订单")
+    @ApiOperation("根据id查酒店订单")
+    @AnonymousAccess
+    public HotelOrderDto queryOrderById(String id) {
+        HotelOrderDto dto = hotelOrderService.findById(id);
+
+        return dto;
     }
 
     public String getMd5(String str) throws Exception {

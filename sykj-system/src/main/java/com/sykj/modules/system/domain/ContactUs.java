@@ -20,13 +20,10 @@ import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
 import javax.persistence.*;
-import javax.persistence.CascadeType;
 import javax.validation.constraints.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import org.hibernate.annotations.*;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Timestamp;
@@ -36,54 +33,45 @@ import java.io.Serializable;
 * @website https://el-admin.vip
 * @description /
 * @author czy
-* @date 2021-04-29
+* @date 2021-08-02
 **/
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Data
-@Table(name="post")
-public class Post implements Serializable {
+@Table(name="contact_us")
+public class ContactUs implements Serializable {
 
     @Id
-    @Column(name = "post_id")
+    @Column(name = "id")
     @ApiModelProperty(value = "主键")
-    private String postId;
+    private Long id;
 
-    @Column(name = "post_name")
-    @ApiModelProperty(value = "职位名称")
-    private String postName;
+    @Column(name = "name")
+    @ApiModelProperty(value = "姓名")
+    private String name;
 
-    @JoinColumn(name = "dept_id")
-    @ManyToOne(fetch=FetchType.LAZY)
-    @ApiModelProperty(value = "所属部门",hidden = true)
-    private Department dept;
+    @Column(name = "email")
+    @ApiModelProperty(value = "邮箱")
+    private String email;
 
-    @JoinColumn(name = "company_id")
-    @ManyToOne(fetch=FetchType.LAZY)
-    @ApiModelProperty(value = "所属公司",hidden = true)
-    private Company company;
+    @Column(name = "phone")
+    @ApiModelProperty(value = "联系方式")
+    private String phone;
+
+    @Column(name = "message")
+    @ApiModelProperty(value = "留言")
+    private String message;
+
+    @Column(name = "status")
+    @ApiModelProperty(value = "状态 1,未完成，2,已完成")
+    private Integer status;
 
     @Column(name = "create_time")
     @CreationTimestamp
     @ApiModelProperty(value = "创建时间")
     private Timestamp createTime;
 
-    @Column(name = "update_time")
-    @UpdateTimestamp
-    @ApiModelProperty(value = "更新时间")
-    private Timestamp updateTime;
-
-    @Column(name = "create_by")
-    @CreatedBy
-    @ApiModelProperty(value = "创建者")
-    private String createBy;
-
-    @Column(name = "update_by")
-    @LastModifiedBy
-    @ApiModelProperty(value = "最后更新")
-    private String updateBy;
-
-    public void copy(Post source){
+    public void copy(ContactUs source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }
 }

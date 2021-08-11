@@ -65,7 +65,7 @@ public class PostController {
     @GetMapping(value = "/getPost")
     @Log("查询api/post")
     @ApiOperation("查询api/post")
-    @PreAuthorize("@el.check('post:list')")
+    @PreAuthorize("@el.check('post:clist')")
     public ResponseEntity<Object> getPost(PostQueryCriteria criteria, Pageable pageable, String companyId){
         criteria.setCompanyId(companyId);
         return new ResponseEntity<>(postService.queryAll(criteria,pageable),HttpStatus.OK);
@@ -92,9 +92,6 @@ public class PostController {
     @ApiOperation("修改api/post")
     @PreAuthorize("@el.check('post:edit')")
     public ResponseEntity<Object> update(@Validated @RequestBody Post resources){
-        if(null == resources.getPPost().getPostId() || resources.getPPost().getPostId().isEmpty()){
-            resources.setPPost(null);
-        }
         postService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

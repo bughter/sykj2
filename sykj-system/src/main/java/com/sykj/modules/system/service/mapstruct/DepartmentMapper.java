@@ -13,28 +13,20 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.sykj.modules.system.service.dto;
+package com.sykj.modules.system.service.mapstruct;
 
-import lombok.Data;
-import java.util.List;
-import com.sykj.annotation.Query;
+import com.sykj.base.BaseMapper;
+import com.sykj.modules.system.domain.Department;
+import com.sykj.modules.system.service.dto.DepartmentDto;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 /**
 * @website https://el-admin.vip
 * @author czy
-* @date 2021-04-29
+* @date 2021-08-03
 **/
-@Data
-public class PostQueryCriteria{
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface DepartmentMapper extends BaseMapper<DepartmentDto, Department> {
 
-    /** 模糊 */
-    @Query(type = Query.Type.INNER_LIKE)
-    private String postName;
-
-    /** 精确 */
-    @Query(joinName = "dept", propName="id")
-    private String deptId;
-
-    @Query(joinName = "company", propName="id")
-    private String companyId;
 }

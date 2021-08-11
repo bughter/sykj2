@@ -15,43 +15,41 @@
 */
 package com.sykj.modules.system.service.dto;
 
-import com.sykj.modules.system.domain.Company;
-import com.sykj.modules.system.domain.Department;
-import com.sykj.modules.system.domain.Post;
 import lombok.Data;
 import java.sql.Timestamp;
 import java.io.Serializable;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 
 /**
 * @website https://el-admin.vip
 * @description /
 * @author czy
-* @date 2021-04-29
+* @date 2021-08-02
 **/
 @Data
-public class PostDto implements Serializable {
+public class ContactUsDto implements Serializable {
 
     /** 主键 */
-    private String postId;
+    /** 防止精度丢失 */
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long id;
 
-    /** 职位名称 */
-    private String postName;
+    /** 姓名 */
+    private String name;
 
-    /** 所属部门 */
-    private Department dept;
+    /** 邮箱 */
+    private String email;
 
-    /** 所属公司 */
-    private Company company;
+    /** 联系方式 */
+    private String phone;
+
+    /** 留言 */
+    private String message;
+
+    /** 状态 1,未完成，2,已完成 */
+    private Integer status;
 
     /** 创建时间 */
     private Timestamp createTime;
-
-    /** 更新时间 */
-    private Timestamp updateTime;
-
-    /** 创建者 */
-    private String createBy;
-
-    /** 最后更新 */
-    private String updateBy;
 }

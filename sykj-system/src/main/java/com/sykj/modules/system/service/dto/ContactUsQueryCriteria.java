@@ -15,43 +15,19 @@
 */
 package com.sykj.modules.system.service.dto;
 
-import com.sykj.modules.system.domain.Company;
-import com.sykj.modules.system.domain.Department;
-import com.sykj.modules.system.domain.Post;
 import lombok.Data;
-import java.sql.Timestamp;
-import java.io.Serializable;
+import java.util.List;
+import com.sykj.annotation.Query;
 
 /**
 * @website https://el-admin.vip
-* @description /
 * @author czy
-* @date 2021-04-29
+* @date 2021-08-02
 **/
 @Data
-public class PostDto implements Serializable {
+public class ContactUsQueryCriteria{
 
-    /** 主键 */
-    private String postId;
-
-    /** 职位名称 */
-    private String postName;
-
-    /** 所属部门 */
-    private Department dept;
-
-    /** 所属公司 */
-    private Company company;
-
-    /** 创建时间 */
-    private Timestamp createTime;
-
-    /** 更新时间 */
-    private Timestamp updateTime;
-
-    /** 创建者 */
-    private String createBy;
-
-    /** 最后更新 */
-    private String updateBy;
+    /** 精确 */
+    @Query
+    private Integer status;
 }

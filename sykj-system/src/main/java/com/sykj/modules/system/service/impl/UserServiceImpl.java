@@ -15,6 +15,7 @@
  */
 package com.sykj.modules.system.service.impl;
 
+import com.sykj.modules.system.domain.Department;
 import com.sykj.modules.system.domain.Post;
 import com.sykj.modules.system.domain.Rules;
 import com.sykj.modules.system.service.mapstruct.UserMapper;
@@ -155,6 +156,11 @@ public class UserServiceImpl implements UserService {
             Rules rules=new Rules();
             rules.setId(resources.getRules().getId());
             user.setRules(rules);
+        }
+        if(null!=resources.getDepartment()){
+            Department department=new Department();
+            department.setId(resources.getDepartment().getId());
+            user.setDepartment(department);
         }
         userRepository.save(user);
         // 清除缓存

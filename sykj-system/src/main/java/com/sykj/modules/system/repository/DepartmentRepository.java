@@ -13,28 +13,16 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.sykj.modules.system.service.dto;
+package com.sykj.modules.system.repository;
 
-import lombok.Data;
-import java.util.List;
-import com.sykj.annotation.Query;
+import com.sykj.modules.system.domain.Department;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
 * @website https://el-admin.vip
 * @author czy
-* @date 2021-04-29
+* @date 2021-08-03
 **/
-@Data
-public class PostQueryCriteria{
-
-    /** 模糊 */
-    @Query(type = Query.Type.INNER_LIKE)
-    private String postName;
-
-    /** 精确 */
-    @Query(joinName = "dept", propName="id")
-    private String deptId;
-
-    @Query(joinName = "company", propName="id")
-    private String companyId;
+public interface DepartmentRepository extends JpaRepository<Department, Long>, JpaSpecificationExecutor<Department> {
 }

@@ -15,12 +15,12 @@
 */
 package com.sykj.modules.system.domain;
 
+import com.sykj.base.BaseEntity;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
 import javax.persistence.*;
-import javax.persistence.CascadeType;
 import javax.validation.constraints.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -36,32 +36,39 @@ import java.io.Serializable;
 * @website https://el-admin.vip
 * @description /
 * @author czy
-* @date 2021-04-29
+* @date 2021-08-03
 **/
-@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Data
-@Table(name="post")
-public class Post implements Serializable {
+@Table(name="department")
+@EntityListeners(AuditingEntityListener.class)
+public class Department implements Serializable {
 
     @Id
-    @Column(name = "post_id")
+    @Column(name = "id")
     @ApiModelProperty(value = "主键")
-    private String postId;
+    @NotNull(groups = BaseEntity.Update.class)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "post_name")
-    @ApiModelProperty(value = "职位名称")
-    private String postName;
+    @Column(name = "name")
+    @ApiModelProperty(value = "部门名称")
+    private String name;
 
-    @JoinColumn(name = "dept_id")
-    @ManyToOne(fetch=FetchType.LAZY)
-    @ApiModelProperty(value = "所属部门",hidden = true)
-    private Department dept;
+    @JoinColumn(name = "p_id")
+    @ManyToOne
+    @ApiModelProperty(value = "上级部门",hidden = true)
+    private Department pDept;
 
-    @JoinColumn(name = "company_id")
-    @ManyToOne(fetch=FetchType.LAZY)
-    @ApiModelProperty(value = "所属公司",hidden = true)
-    private Company company;
+    @Column(name = "create_by")
+    @ApiModelProperty(value = "创建人")
+    @CreatedBy
+    private String createBy;
+
+    @Column(name = "update_by")
+    @ApiModelProperty(value = "最后更新")
+    @LastModifiedBy
+    private String updateBy;
 
     @Column(name = "create_time")
     @CreationTimestamp
@@ -73,17 +80,19 @@ public class Post implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Timestamp updateTime;
 
-    @Column(name = "create_by")
-    @CreatedBy
-    @ApiModelProperty(value = "创建者")
-    private String createBy;
 
-    @Column(name = "update_by")
-    @LastModifiedBy
-    @ApiModelProperty(value = "最后更新")
-    private String updateBy;
+    @JoinColumn(name = "company_id")
+    @ManyToOne
+    @ApiModelProperty(value = "公司",hidden = true)
+    private Company company;
 
-    public void copy(Post source){
+
+    @JoinColumn(name = "manager")
+    @ManyToOne
+    @ApiModelProperty(value = "负责人",hidden = true)
+    private User manager;
+
+    public void copy(Department source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }
 }
